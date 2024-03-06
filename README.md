@@ -10,4 +10,4 @@ pip install https://github.com/kivymd/KivyMD/archive/master.zip
 to run the program:
 - download all files
 - open g_check_(refactored).py
-- run
+- run program
