@@ -9,5 +9,7 @@ pip install https://github.com/kivymd/KivyMD/archive/master.zip
 
 to run the program:
 - download all files
+- setup database by opening xampp
+- import sql file
 - open g_check_(refactored).py
 - run program
