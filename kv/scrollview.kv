@@ -1,0 +1,41 @@
+MDScreen:
+
+    MDButton:
+        halign: "center"
+        pos_hint: {'center_x':.5,'center_y':.8}    
+        theme_text_color:"Custom"
+        md_bg_color: "black"
+        on_press:
+            app.start()
+            app.show_balance()
+
+        MDButtonText:
+            text: "Press Me!"
+
+    MDBoxLayout:
+        id: scrollView
+        padding: 15
+        orientation: "vertical"
+        size_hint: .9, .75
+        pos_hint: {"center_x": .5, "center_y": .425}
+        theme_bg_color: "Custom"
+        md_bg_color: "#0d82f6cc"
+
+        MDScrollView:
+            do_scroll_x: False
+            do_scroll_y: True
+            size_hint_y: .9
+            size_hint_x: 1
+            
+            MDList:
+                id: container 
+
+    MDLabel:
+        id:Label
+        text: "##############"
+        halign: "center"
+        text_color: (1, 1, 1, 1)
+        pos_hint: {'center_y':.9}
+                   
+                    
+        

@@ -1,0 +1,867 @@
+<BaseMDNavigationItem>
+    MDNavigationItemIcon:
+        icon: root.icon
+        theme_icon_color: "Custom"
+        icon_color_normal: (0,0,0,.5)
+        icon_color_active: (246, 130, 13, 0.8)
+        
+    MDNavigationItemLabel:
+        text: root.text
+        halign: "center"
+        theme_text_color: "Custom"
+        text_color_normal: (0,0,0,.5)
+        text_color_active: (246, 130, 13, 0.8)
+
+
+<BaseScreen>
+
+MDScreenManager:
+    ############## Set up Screen
+
+    MDScreen:
+        name: "setupScreen"
+        md_bg_color: "#0d82f6"
+        
+        Image:
+            source: "Images\\otherbg.png"
+            size_hint: None,None
+            size: hero_from.size
+            width: "125dp"
+            height: "125dp"
+            pos_hint: {'center_x':.5,'center_y':.8}
+
+        MDTextField:
+            id: adminidField
+            font_size: "20dp"
+            size_hint_x: .85
+            pos_hint: {'center_x':.5,'center_y':.60}
+
+            theme_line_color: "Custom"
+            line_color_normal: (4,45,188)
+            theme_text_color: "Custom"
+            text_color_normal: (4,45,188)
+
+            on_text: self.text = self.text.replace(" "," ")
+            theme_line_color: "Custom"
+            line_color_focus: (16,132,244)
+            theme_text_color: "Custom"
+            text_color_focus: (16,132,244)
+            halign: "center"
+
+            MDTextFieldHelperText:
+                text: "Please Input A Valid Credential"
+                text_color_focus: "white"
+            MDTextFieldHintText:
+                text: "AdminID"
+            MDTextFieldTrailingIcon:
+                icon: "account-box"
+
+        MDTextField:
+            id: authField
+            font_size: "20dp"
+            size_hint_x: .85
+            pos_hint: {'center_x':.5,'center_y':.475}
+
+            theme_line_color: "Custom"
+            line_color_normal: (4,45,188)
+            theme_text_color: "Custom"
+            text_color_normal: (4,45,188)
+
+            on_text: self.text = self.text.replace(" "," ")
+            theme_line_color: "Custom"
+            line_color_focus: (16,132,244)
+            theme_text_color: "Custom"
+            text_color_focus: (16,132,244)
+
+            halign: "center"
+
+            password: True
+            on_text: self.text = self.text.replace(" "," ")
+            password_mask: "•"
+            MDTextFieldHintText:
+                text: "Pin"
+            MDTextFieldTrailingIcon:
+                icon: "key"
+            MDTextFieldMaxLengthText:
+                max_text_length: 4
+
+        MDButton:
+            style: "elevated"
+            font_size: "22dp"
+            pos_hint: {'center_x':.5,'center_y':.35}
+
+            theme_bg_color: "Custom"
+            md_bg_color: (13,130,246,0.8)
+            theme_icon_color: "Custom"
+            icon_color: "#0d82f6"
+
+            on_press:
+                root.current = "loginScreen" if app.admin_login() == True else app.fail() 
+
+            MDButtonText:
+                bold: True
+                text: "Log In"
+                theme_text_color: "Custom"
+                text_color:(246, 130, 13, 0.8)
+
+        MDLabel:
+            text: "------------------------ or -----------------------"
+            font_size: "22dp"
+            halign: "center"
+            pos_hint: {'center_y':.3}
+
+        MDButton:
+            style: "elevated"
+            font_size: "22dp"
+            pos_hint: {'center_x':.5,'center_y':.25}
+
+            theme_bg_color: "Custom"
+            md_bg_color: (13,130,246,0.8)
+            theme_icon_color: "Custom"
+            icon_color: "#0d82f6"
+
+            on_press:
+                root.current = "adminRegistration"
+
+            MDButtonText:
+                bold: True
+                text: "Create an account"
+                theme_text_color: "Custom"
+                text_color:(246, 130, 13, 0.8)
+
+        MDHeroFrom:
+            id: hero_from
+            tag: "hero"
+            size_hint: None, None
+            size: "100dp", "100dp"
+            pos_hint: {"top": .98}
+            x: 24
+
+    ############## Cashier Login Screen
+    MDScreen:
+        name: "loginScreen"
+        md_bg_color: "#0d82f6"
+
+        MDLabel:
+            text:"Hello!"
+            font_style: "Display"
+            role: "large"
+            halign:"center"
+            text_color: "#FFFFFF"
+            pos_hint: {'center_y':.8}
+
+        MDTextField:
+            id: cashieridField
+            font_size: "20dp"
+            size_hint_x: .85
+            pos_hint: {'center_x':.5,'center_y':.60}
+
+            theme_line_color: "Custom"
+            line_color_normal: (4,45,188)
+            theme_text_color: "Custom"
+            text_color_normal: (4,45,188)
+
+            on_text: self.text = self.text.replace(" "," ")
+            theme_line_color: "Custom"
+            line_color_focus: (16,132,244)
+            theme_text_color: "Custom"
+            text_color_focus: (16,132,244)
+            halign: "center"
+
+            MDTextFieldHelperText:
+                text: "Please Input A Valid Credential"
+                text_color_focus: "white"
+            MDTextFieldHintText:
+                text: "CashierID"
+            MDTextFieldTrailingIcon:
+                icon: "account-box"
+
+        MDTextField:
+            id: PinField
+            font_size: "20dp"
+            size_hint_x: .85
+            pos_hint: {'center_x':.5,'center_y':.475}
+
+            theme_line_color: "Custom"
+            line_color_normal: (4,45,188)
+            theme_text_color: "Custom"
+            text_color_normal: (4,45,188)
+
+            on_text: self.text = self.text.replace(" "," ")
+            theme_line_color: "Custom"
+            line_color_focus: (16,132,244)
+            theme_text_color: "Custom"
+            text_color_focus: (16,132,244)
+
+            halign: "center"
+
+            password: True
+            on_text: self.text = self.text.replace(" "," ")
+            password_mask: "•"
+            MDTextFieldHintText:
+                text: "Pin"
+            MDTextFieldTrailingIcon:
+                icon: "key"
+            MDTextFieldMaxLengthText:
+                max_text_length: 4
+
+        MDButton:
+            style: "elevated"
+            font_size: "22dp"
+            pos_hint: {'center_x':.25,'center_y':.35}
+
+            theme_bg_color: "Custom"
+            md_bg_color: (13,130,246,0.8)
+            theme_icon_color: "Custom"
+            icon_color: "#0d82f6"
+
+            on_press:              
+                root.current = "dashboard" if app.cashier_login() == True else app.fail() 
+                app.dashboard()
+                    
+            MDButtonText:
+                bold: True
+                text: "Log In"
+                theme_text_color: "Custom"
+                text_color:(246, 130, 13, 0.8)
+
+        MDButton:
+            style: "elevated"
+            font_size: "22dp"
+            pos_hint: {'center_x':.725,'center_y':.35}
+
+            theme_bg_color: "Custom"
+            md_bg_color: (13,130,246,0.8)
+            theme_icon_color: "Custom"
+            icon_color: "#0d82f6"
+
+            on_press:                
+                root.current = "cashierRegistration"
+                    
+            MDButtonText:
+                bold: True
+                text: "Add Cashier"
+                theme_text_color: "Custom"
+                text_color:(246, 130, 13, 0.8)
+
+
+        MDHeroFrom:
+            id: hero_from
+            tag: "hero"
+            size_hint: None, None
+            size: "100dp", "100dp"
+            pos_hint: {"top": .98}
+            x: 24
+
+    ########## Dashboard
+    MDScreen:
+        name: "dashboard"
+        md_bg_color: "#0d82f6"
+        
+        MDBoxLayout:
+            orientation: "vertical"
+
+            MDScreenManager:
+                id: screen_manager
+
+                BaseScreen:
+                    name: "Cash - In"
+                    pos_hint: {"center_y": .525}
+
+                    MDBoxLayout:
+                        padding: 5
+                        orientation: "vertical"
+                        size_hint: .85, .60
+                        pos_hint: {"center_x": .5, "center_y": .45}
+                        radius: [5,5,5,5]
+                        
+                        MDScrollView:
+                            padding: 1
+                            do_scroll_x: False
+                            do_scroll_y: True
+                            size_hint_y: .9
+                            size_hint_x: 1
+                            
+                            MDList:
+                                id: cash_ins_container 
+
+                BaseScreen:                    
+                    name: "Cash-Out"
+                    pos_hint: {"center_y": .525}
+
+                    MDBoxLayout:
+                        padding: 5
+                        orientation: "vertical"
+                        size_hint: .85, .60
+                        pos_hint: {"center_x": .5, "center_y": .45}
+                        radius: [5,5,5,5]
+                        
+                        MDScrollView:
+                            padding: 1
+                            do_scroll_x: False
+                            do_scroll_y: True
+                            size_hint_y: .9
+                            size_hint_x: 1
+                            
+                            MDList:
+                                id: cash_outs_container 
+                
+                BaseScreen:
+                    name: "Recent"
+                    pos_hint: {"center_y": .525}
+                    
+                    MDBoxLayout:
+                        padding: 5
+                        orientation: "vertical"
+                        size_hint: .85, .60
+                        pos_hint: {"center_x": .5, "center_y": .45}
+                        radius: [5,5,5,5]
+                        
+                        MDScrollView:
+                            padding: 1
+                            do_scroll_x: False
+                            do_scroll_y: True
+                            size_hint_y: .9
+                            size_hint_x: 1
+                            
+                            MDList:
+                                id: recent_transactions_container 
+
+            MDNavigationBar:
+                on_switch_tabs: app.on_switch_tabs(*args)
+                
+                BaseMDNavigationItem
+                    icon: "cash-multiple"
+                    text: "Recent"
+                    halign: "center"  
+                    active: True
+
+                BaseMDNavigationItem
+                    icon: "cash-plus"
+                    text: "Cash - In"
+                    halign: "center"
+    
+
+                BaseMDNavigationItem
+                    icon: "cash-minus"
+                    text: "Cash-Out"
+                    halign: "center"
+
+                                  
+        MDExtendedFabButton:
+            pos_hint: {"center_x": .9,'center_y':.95}
+            fab_state: "expand"
+            size_hint_y:.05
+
+            on_press:
+                root.current = "loginScreen"
+                app.reset_text_fields()
+
+            MDExtendedFabButtonIcon
+                icon: "exit-to-app"
+                style: "small"
+
+        MDLabel:
+            id:CashierID
+            text:"CASHIER ID "
+            font_style: "Headline"
+            role: "small"
+            halign:"left"
+            text_color: "#FFFFFF"
+            pos_hint: {'center_x':.575,'center_y':.925}
+
+        MDLabel:
+            text:"Current Balance"
+            bold:True
+            theme_bg_color: "Custom"
+            color: "#0d82f6"
+            theme_text_color: "Custom"
+            halign:"center"
+            color: "#0d82f6"
+            pos_hint: {'center_y':.875}
+        MDLabel:
+            id:BalanceLabelDashboard
+            text:"#######"
+            bold:True
+            theme_bg_color: "Custom"
+            color: "#0d82f6"
+            theme_text_color: "Custom"
+            halign:"center"
+            color: "#0d82f6"
+            pos_hint: {'center_y':.8375} 
+            
+
+        MDButton:
+            style: "elevated"
+            theme_width: "Custom"
+            theme_bg_color: "Custom"
+            md_bg_color: (13, 130, 246, 1)
+            height: "45dp"
+            size_hint_x: .4
+            pos_hint: {"center_x": .275, "center_y": .2}
+            on_press:
+                root.current = "cash_in"
+
+            MDButtonIcon:
+                icon: "plus"
+
+            MDButtonText:
+                id: text
+                text: "Cash In"
+                pos_hint: {"center_x": .5, "center_y": .5}
+                theme_text_color: "Custom"
+                text_color:(0, 0, 0, 1)
+
+        MDButton:
+            style: "elevated"
+            theme_width: "Custom"
+            theme_bg_color: "Custom"
+            md_bg_color: (13, 130, 246, 1)
+            height: "45dp"
+            size_hint_x: .4
+            pos_hint: {"center_x": .725, "center_y": .2}
+
+            on_press:
+                root.current = "cash_out" 
+
+            MDButtonIcon:
+                icon: "minus"
+
+            MDButtonText:
+                id: text
+                text: "Cash Out"
+                pos_hint: {"center_x": .5, "center_y": .5}
+                theme_text_color: "Custom"
+                text_color:(0, 0, 0, 1)
+
+    ########## Cash In
+    MDScreen:
+        name: "cash_in"
+        md_bg_color: "#0d82f6"
+
+        MDFabButton:
+            icon: "arrow-right"
+            pos_hint: {"center_x": .9,'center_y':.95}
+            style: "small"
+            on_press:
+                root.current = "dashboard"
+                app.reset_text_fields()
+
+        MDLabel:
+            text:"Cash In"
+            font_style: "Headline"
+            role: "small"
+            halign:"left"
+            text_color: "#0d82f6"
+            pos_hint: {'center_x':.575,'center_y':.925}
+            
+
+        MDLabel:
+            text:"Current Balance"
+            bold:True
+            theme_bg_color: "Custom"
+            color: "#0d82f6"
+            theme_text_color: "Custom"
+            halign:"center"
+            color: "#0d82f6"
+            pos_hint: {'center_y':.875}
+
+        MDLabel:
+            id:BalanceLabelCashIn
+            text:"#######"
+            bold:True
+            theme_bg_color: "Custom"
+            color: "#0d82f6"
+            theme_text_color: "Custom"
+            halign:"center"
+            color: "#0d82f6"
+            pos_hint: {'center_y':.8375} 
+            
+
+        MDTextField:
+            id: cash_in_amount
+            font_size: "20dp"
+            size_hint_x: .85
+            pos_hint: {'center_x':.5,'center_y':.625}
+
+            theme_line_color: "Custom"
+            line_color_normal: (0,0,0,1)
+            theme_text_color: "Custom"
+            text_color_normal: (0,0,0,1)
+
+            on_text: self.text = self.text.replace(" "," ")
+            theme_line_color: "Custom"
+            line_color_focus: (0,0,0,1)
+            theme_text_color: "Custom"
+            text_color_focus: (0,0,0,1)
+
+            MDTextFieldHelperText:
+                text: "ex. 100.00"
+                text_color_focus: "black"
+            MDTextFieldHintText:
+                text: "Amount"
+            MDTextFieldTrailingIcon:
+                icon: "cash"
+
+        MDTextField:
+            id: cash_in_ref_number
+            font_size: "20dp"
+            size_hint_x: .85
+            size_hint_y: .2
+            pos_hint: {'center_x':.5,'center_y':.475}
+
+            theme_line_color: "Custom"
+            line_color_normal: (0,0,0,1)
+            theme_text_color: "Custom"
+            text_color_normal: (0,0,0,1)
+
+            on_text: self.text = self.text.replace(" "," ")
+            theme_line_color: "Custom"
+            line_color_focus: (0,0,0,1)
+            theme_text_color: "Custom"
+            text_color_focus: (0,0,0,1)
+
+            MDTextFieldHelperText:
+                text: "ex. 5242"
+                text_color_focus: "black"
+            MDTextFieldHintText:
+                text: "Last Four Digits of Reference #"
+            MDTextFieldTrailingIcon:
+                icon: "numeric"
+
+        MDButton:
+            style: "elevated"
+            theme_width: "Custom"
+            height: "45dp"
+            size_hint_x: .5
+            pos_hint: {"center_x": .5, "center_y": .2}
+
+            on_press:
+                app.cash_in()
+                app.dashboard()
+                root.current = "dashboard"
+
+            MDButtonIcon:
+                icon: "content-save"
+                theme_bg_color: "Custom"
+                color: "#0d82f6"
+
+            MDButtonText:
+                id: text
+                text: "Confirm Cash In"
+                halign:"center"
+                pos_hint: {"center_y": .5}
+                theme_text_color: "Custom"
+                text_color:(0, 0, 0, 1)
+                
+    ########## Cash Out
+    MDScreen:
+        name: "cash_out"
+        md_bg_color: "#0d82f6"
+
+        MDFabButton:
+            icon: "arrow-right"
+            pos_hint: {"center_x": .9,'center_y':.95}
+            style: "small"
+
+            on_press:
+                root.current = "dashboard"
+                app.reset_text_fields()
+
+        MDLabel:
+            text:"Cash Out"
+            font_style: "Headline"
+            role: "small"
+            halign:"left"
+            text_color: "#0d82f6"
+            pos_hint: {'center_x':.575,'center_y':.925}
+
+        MDLabel:
+            text:"Current Balance"
+            bold:True
+            theme_bg_color: "Custom"
+            color: "#0d82f6"
+            theme_text_color: "Custom"
+            halign:"center"
+            color: "#0d82f6"
+            pos_hint: {'center_y':.875}  
+
+        MDLabel:
+            id:BalanceLabelCashout
+            text:"#######"
+            bold:True
+            theme_bg_color: "Custom"
+            color: "#0d82f6"
+            theme_text_color: "Custom"
+            halign:"center"
+            color: "#0d82f6"
+            pos_hint: {'center_y':.8375}  
+            
+
+        MDTextField:
+            id: cash_out_amount
+            font_size: "20dp"
+            size_hint_x: .85
+            pos_hint: {'center_x':.5,'center_y':.625}
+
+            theme_line_color: "Custom"
+            line_color_normal: (0,0,0,1)
+            theme_text_color: "Custom"
+            text_color_normal: (0,0,0,1)
+
+            on_text: self.text = self.text.replace(" "," ")
+            theme_line_color: "Custom"
+            line_color_focus: (0,0,0,1)
+            theme_text_color: "Custom"
+            text_color_focus: (0,0,0,1)
+
+            MDTextFieldHelperText:
+                text: "ex. 100.00"
+                text_color_focus: "black"
+            MDTextFieldHintText:
+                text: "Amount"
+            MDTextFieldTrailingIcon:
+                icon: "cash"
+
+        MDTextField:
+            id: cash_out_ref_number
+            font_size: "20dp"
+            size_hint_x: .85
+            size_hint_y: .2
+            pos_hint: {'center_x':.5,'center_y':.475}
+
+            theme_line_color: "Custom"
+            line_color_normal: (0,0,0,1)
+            theme_text_color: "Custom"
+            text_color_normal: (0,0,0,1)
+
+            on_text: self.text = self.text.replace(" "," ")
+            theme_line_color: "Custom"
+            line_color_focus: (0,0,0,1)
+            theme_text_color: "Custom"
+            text_color_focus: (0,0,0,1)
+
+            MDTextFieldHelperText:
+                text: "ex. 5242"
+                text_color_focus: "black"
+            MDTextFieldHintText:
+                text: "Last Four Digits of Reference #"
+            MDTextFieldTrailingIcon:
+                icon: "numeric"
+
+        MDButton:
+            style: "elevated"
+            theme_width: "Custom"
+            height: "45dp"
+            size_hint_x: .5
+            pos_hint: {"center_x": .5, "center_y": .2}
+
+            on_press:
+                root.current = "dashboard" if app.cash_out() == True else print("Error")
+                app.dashboard()
+                
+            MDButtonIcon:                
+                icon: "content-save"
+                theme_bg_color: "Custom"
+                color: "#0d82f6"
+
+            MDButtonText:
+                id: text
+                text: "Confirm Cash Out"
+                halign:"center"
+                pos_hint: {"center_y": .5}
+                theme_text_color: "Custom"
+                text_color:(0, 0, 0, 1)
+        
+    ############  Admin Registration Screen   
+    MDScreen:
+        name: "adminRegistration"
+        md_bg_color: "#0d82f6"
+
+        MDHeroTo:
+            id: hero_to
+            tag: "hero"
+            size_hint: None, None
+            size: "360dp", "940dp"
+            pos_hint: {"center_x": .5, "center_y": .5}
+
+        MDFabButton:
+            icon: "arrow-right"
+            pos_hint: {"center_x": .9,'center_y':.95}
+            style: "small"
+            on_press:
+                root.current = "setupScreen"
+                app.reset_text_fields()
+
+        MDButton:
+            id:create_account
+            style: "elevated"
+            pos_hint: {"center_x": .5}
+            y: "36dp"
+            on_press:
+                root.current = "loginScreen" if app.register() == True else app.fail() 
+
+                   
+            MDButtonText:
+                text: "Create Account"
+                theme_text_color: "Custom"
+                text_color:(0, 0, 0, 1)
+
+        MDLabel:
+            text:"Create an Account!"
+            font_style: "Headline"
+            role: "large"
+            bold: "True"
+            halign:"center"
+            text_color: "#FFFFFF"
+            pos_hint: {'center_y':.85}
+
+
+        MDTextField:
+            id: registeradminidField
+            size_hint_x: .85
+            color: "#FFFFFF"
+            pos_hint: {'center_x':.5,'center_y':.675}
+            on_text: self.text = self.text.replace(" "," ")
+
+            theme_line_color: "Custom"
+            line_color_normal: (4,45,188)
+            line_color_focus: (16,132,244)
+
+            theme_text_color: "Custom"
+            text_color_normal: (4,45,188)
+            text_color_focus: (16,132,244)
+
+            MDTextFieldHintText:
+                text: "Admin_ID"
+                theme_text_color: "Custom"
+                text_color_normal: (4,45,188)
+                text_color_focus: (16,132,244)
+            MDTextFieldTrailingIcon:
+                icon: "account-box"
+            
+        MDTextField:
+
+            id: registeradminPinField
+            font_size: "20dp"
+            size_hint_x: .85
+            color: "#FFFFFF"
+            pos_hint: {'center_x':.5,'center_y':.575}
+            
+            theme_line_color: "Custom"
+            line_color_normal: (4,45,188)
+            line_color_focus: (16,132,244)
+
+            theme_text_color: "Custom"
+            text_color_normal: (4,45,188)
+            text_color_focus: (16,132,244)
+
+            MDTextFieldHintText:
+                text: "Pin"
+                theme_text_color: "Custom"
+                text_color_normal: (4,45,188)
+                text_color_focus: (16,132,244)
+            MDTextFieldTrailingIcon:
+                icon: "key"
+
+        MDTextField:
+            id: balanceField
+            font_size: "20dp"
+            size_hint_x: .85
+            pos_hint: {'center_x':.5,'center_y':.475}
+
+            theme_line_color: "Custom"
+            line_color_normal: (4,45,188)
+            line_color_focus: (16,132,244)
+
+            theme_text_color: "Custom"
+            text_color_normal: (4,45,188)
+            text_color_focus: (16,132,244)
+
+            halign: "center"
+            on_text: self.text = self.text.replace(" "," ")
+            
+            MDTextFieldHintText:
+                text: "Balance"
+                theme_text_color: "Custom"
+                text_color_normal: (4,45,188)
+                text_color_focus: (16,132,244)
+            MDTextFieldTrailingIcon:
+                icon: "key"
+
+    ############## Cashier Registration Screen
+    MDScreen:
+        name: "cashierRegistration"
+        md_bg_color: "#0d82f6"
+
+        MDFabButton:
+            icon: "arrow-right"
+            pos_hint: {"center_x": .9,'center_y':.95}
+            style: "small"
+            on_press:
+                root.current = "loginScreen"
+                app.reset_text_fields()
+
+        MDLabel:
+            text: f"Welcome Cashier: {app.cashier_name()}" 
+            font_style: "Headline"
+            role: "medium"
+            halign:"center"
+            text_color: "#FFFFFF"
+            pos_hint: {'center_y':.675}    
+            
+        MDTextField:
+            id: cashierRegistrationPinField
+            font_size: "20dp"
+            size_hint_x: .85
+            pos_hint: {'center_x':.5,'center_y':.475}
+
+            theme_line_color: "Custom"
+            line_color_normal: (4,45,188)
+            theme_text_color: "Custom"
+            text_color_normal: (4,45,188)
+
+            on_text: self.text = self.text.replace(" "," ")
+            theme_line_color: "Custom"
+            line_color_focus: (16,132,244)
+            theme_text_color: "Custom"
+            text_color_focus: (16,132,244)
+
+            halign: "center"
+
+            password: True
+            on_text: self.text = self.text.replace(" "," ")
+            password_mask: "•"
+            MDTextFieldHintText:
+                text: "Input Your Desired Pin"
+            MDTextFieldTrailingIcon:
+                icon: "key"
+            MDTextFieldMaxLengthText:
+                max_text_length: 4
+
+        MDButton:
+            style: "elevated"
+            font_size: "22dp"
+            pos_hint: {'center_x':.5,'center_y':.35}
+
+            theme_bg_color: "Custom"
+            md_bg_color: (13,130,246,0.8)
+            theme_icon_color: "Custom"
+            icon_color: "#0d82f6"
+
+            on_press:                
+                root.current = "loginScreen" if app.cashier_register() == True else app.fail() 
+                    
+            MDButtonText:
+                bold: True
+                text: "Add Cashier"
+                theme_text_color: "Custom"
+                text_color:(246, 130, 13, 0.8)
+
+        MDHeroFrom:
+            id: hero_from
+            tag: "hero"
+            size_hint: None, None
+            size: "100dp", "100dp"
+            pos_hint: {"top": .98}
+            x: 24

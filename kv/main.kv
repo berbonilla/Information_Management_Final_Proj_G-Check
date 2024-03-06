@@ -1,0 +1,309 @@
+MDScreenManager:
+    ############## Login Screen
+    MDScreen:
+        name: "loginScreen"
+        Image:
+            source: "Images\bg.jpg"
+            size_hint: None,None
+            height: "640dp"
+            width: "1060dp"
+            pos_hint: {'center_x':.5,'center_y':.5}
+
+        Image:
+            source: "Images\otherbg.png"
+            size_hint: None,None
+            size: hero_from.size
+            width: "125dp"
+            height: "125dp"
+            pos_hint: {'center_x':.5,'center_y':.8}
+
+
+        MDTextField:
+            id: usernameField
+            mode: "rectangle"
+            font_size: "20dp"
+            size_hint_x: .85
+            pos_hint: {'center_x':.5,'center_y':.60}
+
+            theme_line_color: "Custom"
+            line_color_normal: (4,45,188)
+            theme_text_color: "Custom"
+            text_color_normal: (4,45,188)
+
+            on_text: self.text = self.text.replace(" "," ")
+
+            line_color_focus: (16,132,244)
+            hint_text_color_focus: (16,132,244)
+
+            hint_text: "Username/Phone"
+            icon: "account-box"
+
+        MDTextField:
+            id: passwordField
+            mode: "rectangle"
+            font_size: "20dp"
+            size_hint_x: .85
+            pos_hint: {'center_x':.5,'center_y':.475}
+
+            line_color_normal: (4,45,188)
+            text_color_normal: (4,45,188)
+
+            on_text: self.text = self.text.replace(" "," ")
+            line_color_focus: (16,132,244)
+            hint_text_color_focus: (16,132,244)
+
+            password: True
+            on_text: self.text = self.text.replace(" "," ")
+            password_mask: "•"
+            hint_text: "Password"
+            icon: "key"
+
+        MDRaisedButton:
+            style: "elevated"
+            font_size: "22dp"
+            pos_hint: {'center_x':.5,'center_y':.35}
+            text: "Log In"
+            on_press:
+                app.login()
+                root.current = "dashboard" if app.login() == True else print("Invalid Credentials")
+            
+        MDLabel:
+            text: " or "
+            font_size: "22dp"
+            halign: "center"
+            pos_hint: {'center_y':.3}
+
+        MDRaisedButton:
+            style: "elevated"
+            font_size: "22dp"
+            pos_hint: {'center_x':.5,'center_y':.225}
+            text: "Create an account"
+            
+            on_press:
+                root.current = "registration"
+
+        MDHeroFrom:
+            id: hero_from
+            tag: "hero"
+            size_hint: None, None
+            size: "100dp", "100dp"
+            pos_hint: {"top": .98}
+            x: 24
+
+    ########## Dashboard
+    MDScreen:
+        name: "dashboard"
+        md_bg_color: "white"
+    
+        MDRaisedButton:
+            icon: "exit-to-app"
+            pos_hint: {"center_x": .9,'center_y':.95}
+            style: "small"
+            on_press:
+                root.current = "loginScreen"
+
+        MDLabel:
+            text:"Hello, User!"
+            font_size: "90dp"
+            color: "#FF5623"
+            pos_hint: {'center_x':.6,'center_y':.9}
+
+        MDLabel:
+            text:"Current Balance \n     #######"
+            font_size: "90dp"
+            color: "#FF5623"
+            pos_hint: {'center_x':.85,'center_y':.8}  
+
+        MDRaisedButton:
+            style: "elevated"
+            theme_width: "Custom"
+            height: "45dp"
+            size_hint_x: .4
+            pos_hint: {"center_x": .275, "center_y": .2}
+            icon: "plus"
+            id: text
+            text: "Cash In"
+            pos_hint: {"center_x": .5, "center_y": .5}
+            
+            on_press:
+                root.current = "cash_in"
+
+
+        MDRaisedButton:
+            style: "elevated"
+            theme_width: "Custom"
+            height: "45dp"
+            size_hint_x: .4
+            pos_hint: {"center_x": .725, "center_y": .2}
+
+            on_press:
+                root.current = "cash_out"
+
+            icon: "minus"
+            id: text
+            text: "Cash Out"
+            pos_hint: {"center_x": .5, "center_y": .5}
+
+    ########## Cash In
+    MDScreen:
+        name: "cash_in"
+        md_bg_color: "white"
+
+        MDRaisedButton:
+            icon: "exit-to-app"
+            pos_hint: {"center_x": .9,'center_y':.95}
+            style: "small"
+            on_press:
+                root.current = "dashboard"
+
+        MDLabel:
+            text:"Cash In"
+            font_size: "90dp"
+            color: "#FF5623"
+            pos_hint: {'center_x':.6,'center_y':.9}
+
+        MDLabel:
+            text:"Current Balance \n     #######"
+            font_size: "90dp"
+            color: "#FF5623"
+            pos_hint: {'center_x':.85,'center_y':.8}  
+
+        MDRaisedButton:
+            style: "elevated"
+            theme_width: "Custom"
+            height: "45dp"
+            size_hint_x: .5
+            pos_hint: {"center_x": .5, "center_y": .2}
+
+            on_press:
+                root.current = "dashboard"
+
+            icon: "content-save"
+            id: text
+            text: "Confirm Cash In"
+            pos_hint: {"center_x": .6, "center_y": .5}
+
+    ########## Cash Out
+    MDScreen:
+        name: "cash_out"
+        md_bg_color: "white"
+
+        MDRaisedButton:
+            icon: "exit-to-app"
+            pos_hint: {"center_x": .9,'center_y':.95}
+            style: "small"
+            on_press:
+                root.current = "dashboard"
+
+        MDLabel:
+            text:"Cash Out"
+            font_size: "90dp"
+            color: "#FF5623"
+            pos_hint: {'center_x':.6,'center_y':.9}
+
+        MDLabel:
+            text:"Current Balance \n     #######"
+            font_size: "90dp"
+            color: "#FF5623"
+            pos_hint: {'center_x':.85,'center_y':.8}  
+
+        MDRaisedButton:
+            theme_width: "Custom"
+            height: "45dp"
+            size_hint_x: .5
+            pos_hint: {"center_x": .5, "center_y": .2}
+
+            on_press:
+                root.current = "dashboard"
+
+            icon: "content-save"
+            id: text
+            text: "Confirm Cash Out"
+            pos_hint: {"center_x": .6, "center_y": .5}
+        
+
+    ############  Registration Screen   
+
+    MDScreen:
+        name: "registration"
+        hero_to: hero_to
+        md_bg_color: "white"
+
+        MDHeroTo:
+            id: hero_to
+            tag: "hero"
+            size_hint: None, None
+            size: "360dp", "940dp"
+            pos_hint: {"center_x": .5, "center_y": .5}
+
+        MDRaisedButton:
+            pos_hint: {"center_x": .5}
+            y: "36dp"
+            text: "Create Account"
+            on_press:
+                app.register()
+                root.current = "loginScreen" if app.login() == True else print("Invalid Credentials")
+                   
+            
+
+        MDLabel:
+            text:"Create an Account"
+            font_size: "90dp"
+            color: "#FF5623"
+            pos_hint: {'center_x':.6,'center_y':.9}
+
+        MDTextField:
+            id: registerUsernameField
+            mode: "rectangle"
+            font_size: "20dp"
+            mode: "rectangle"
+            size_hint_x: .85
+            line_color_focus: "#FFFFFF"
+            pos_hint: {'center_x':.5,'center_y':.75}
+            on_text: self.text = self.text.replace(" "," ")
+            hint_text: "Username/Phone"
+            icon: "account-box"
+
+        MDTextField:
+            id: registerPasswordField
+            mode: "rectangle"
+            font_size: "20dp"
+            size_hint_x: .85
+            color: "#FFFFFF"
+            pos_hint: {'center_x':.5,'center_y':.65}
+            on_text: self.text = self.text.replace(" "," ")
+            hint_text: "Password"
+            icon: "key"
+
+        MDTextField:
+            id: registerFullNameField
+            mode: "rectangle"
+            font_size: "20dp"
+            size_hint_x: .85
+            color: "#FFFFFF"
+            pos_hint: {'center_x':.5,'center_y':.55}
+            on_text: self.text = self.text.replace(" "," ")
+            text: "Full Name"
+            icon: "rename"
+
+        MDTextField:
+            id: registerRoleField
+            mode: "rectangle"
+            font_size: "20dp"
+            size_hint_x: .85
+            color: "#FFFFFF"
+            pos_hint: {'center_x':.5,'center_y':.45}
+            on_text: self.text = self.text.replace(" "," ")
+            hint_text: "Role"
+            icon: "human"
+
+        MDTextField:
+            id: registerPhoneField
+            mode: "rectangle"
+            font_size: "20dp"
+            size_hint_x: .85
+            color: "#FFFFFF"
+            pos_hint: {'center_x':.5,'center_y':.35}
+            on_text: self.text = self.text.replace(" "," ")
+            hint_text: "Phone Number"
+            icon: "cellphone"
