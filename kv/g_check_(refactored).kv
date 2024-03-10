@@ -1,4 +1,42 @@
 MDScreenManager:
+    ############ Start up Page
+    MDScreen:
+        name: "Start up Page"
+        md_bg_color: "#FFFFFF"
+
+        Image:
+            source: "Images\\otherbg.png"
+            size_hint: None,None
+            size: hero_from.size
+            width: "650dp"
+            height: "650dp"
+            pos_hint: {'center_x':.5,'center_y':.5}
+
+        MDButton:
+            style: "elevated"
+            theme_width : "Custom"
+            size_hint_x: .85
+            height: "56dp"
+            
+            pos_hint: {"center_x": .5,"center_y":.10}
+            y: "36dp"
+            theme_bg_color: "Custom"
+            md_bg_color: "#2C64C6"
+
+            on_press:
+                root.current = "adminRegistration" 
+                
+            MDButtonText:
+                bold: True
+                font_style: "Title"
+                role: "medium"
+                text: "Setup Machine"
+                pos_hint: {"center_x": .5,"center_y":.5}
+                theme_text_color: "Custom"
+                text_color: "#FFFFFF"
+                radius: [25,25,25,25]
+
+
     ############  Admin Registration Screen   
     MDScreen:
         name: "adminRegistration"
@@ -17,7 +55,7 @@ MDScreenManager:
                 size_hint_x: .85
                 height: "56dp"
                 
-                pos_hint: {"center_x": .5,"center_y":.2}
+                pos_hint: {"center_x": .5,"center_y":.25}
                 y: "36dp"
                 theme_bg_color: "Custom"
                 md_bg_color: "#2C64C6"
@@ -58,7 +96,7 @@ MDScreenManager:
                 id: registeradminidField
                 size_hint_x: .85
                 color: "#FFFFFF"
-                pos_hint: {'center_x':.5,'center_y':.65}
+                pos_hint: {'center_x':.5,'center_y':.70}
                 on_text: self.text = self.text.replace(" "," ")
                 radius: [15,15,15,15]
 
@@ -87,7 +125,7 @@ MDScreenManager:
                 font_size: "20dp"
                 size_hint_x: .85
                 color: "#FFFFFF"
-                pos_hint: {'center_x':.5,'center_y':.50}
+                pos_hint: {'center_x':.5,'center_y':.55}
                 radius: [15,15,15,15]
                 
                 theme_line_color: "Custom"
@@ -111,7 +149,7 @@ MDScreenManager:
                 id: balanceField
                 font_size: "20dp"
                 size_hint_x: .85
-                pos_hint: {'center_x':.5,'center_y':.35}
+                pos_hint: {'center_x':.5,'center_y':.40}
                 radius: [15,15,15,15]
 
                 theme_line_color: "Custom"
@@ -139,8 +177,8 @@ MDScreenManager:
             source: "Images\\otherbg.png"
             size_hint: None,None
             size: hero_from.size
-            width: "175dp"
-            height: "175dp"
+            width: "350dp"
+            height: "350dp"
             pos_hint: {'center_x':.5,'center_y':.75}
 
         MDRelativeLayout:
@@ -247,7 +285,7 @@ MDScreenManager:
             pos_hint: {'center_y':.35}
 
             MDLabel:
-                text:"Login"
+                text:"Cashier Login"
                 bold: True
                 font_style: "Headline"
                 role: "large"
@@ -405,7 +443,7 @@ MDScreenManager:
             pos_hint: {'center_y':.35}
 
             MDLabel:
-                text:"Cashier Sign In"
+                text:"Cashier Sign Up"
                 bold: True
                 font_style: "Headline"
                 role: "large"
@@ -479,7 +517,7 @@ MDScreenManager:
 
                 MDButtonText:
                     bold: True
-                    text: "Login"
+                    text: "Sign Up"
                     theme_text_color: "Custom"
                     pos_hint: {"center_x": .5, "center_y": .525}
                     text_color:"#FFFFFF"
@@ -568,6 +606,16 @@ MDScreenManager:
                 pos_hint: {"center_x": .5, "center_y": .620}
                 radius: [35,35,0,0]
                 
+                MDLabel:
+                    text: "Recent Audits"
+                    bold:True
+                    font_style: "Label"
+                    role: "large"
+                    halign:"center"
+                    theme_text_color: "Custom"
+                    text_color:"#034189"
+                    pos_hint: {'center_y':.925} 
+
                 MDScrollView:
                     do_scroll_x: False
                     do_scroll_y: True
@@ -602,8 +650,8 @@ MDScreenManager:
                 source: "Images\\logo.png"
                 size_hint: None,None
                 size: hero_from.size
-                width: "20"
-                height: "20"
+                width: "450"
+                height: "450"
                 pos_hint: {'center_x':.15,'center_y':.5}
 
             MDLabel:
@@ -637,11 +685,24 @@ MDScreenManager:
                     icon_color: "#034189"    
 
         MDRelativeLayout:
-            size_hint_y: ".225"
+            size_hint_y: ".25"
             size_hint_x: ".9"
             radius: [35,35,35,35]
-            pos_hint: {'center_x':.5,'center_y':.775}
+            pos_hint: {'center_x':.5,'center_y':.75}
             md_bg_color: "#FFFFFF"
+
+            MDLabel:
+                id:BalanceLabelDashboard
+                text: "Balance"
+                bold:True
+                font_style: "Label"
+                role: "medium"
+                halign:"center"
+                theme_text_color: "Custom"
+                text_color: "#034189"
+
+                color: "#034189"
+                pos_hint: {'center_y':.55} 
 
             MDLabel:
                 id:BalanceLabelDashboard
@@ -654,7 +715,7 @@ MDScreenManager:
                 text_color: "#034189"
 
                 color: "#034189"
-                pos_hint: {'center_y':.65} 
+                pos_hint: {'center_y':.7} 
 
             MDButton:
                 style: "elevated"
@@ -663,7 +724,7 @@ MDScreenManager:
                 md_bg_color: "#5B8BDF"
                 height: "45dp"
                 size_hint_x: .4
-                pos_hint: {"center_x": .275, "center_y": .325}
+                pos_hint: {"center_x": .275, "center_y": .30}
                 
                 on_press:
                     root.current = "cash_in"
@@ -683,7 +744,7 @@ MDScreenManager:
                 md_bg_color: "#5B8BDF"
                 height: "45dp"
                 size_hint_x: .4
-                pos_hint: {"center_x": .725, "center_y": .325}
+                pos_hint: {"center_x": .725, "center_y": .30}
 
                 on_press:
                     root.current = "cash_out" 
@@ -707,6 +768,18 @@ MDScreenManager:
                 size_hint: .9, .680
                 pos_hint: {"center_x": .5, "center_y": .620}
                 radius: [35,35,0,0]
+
+                MDLabel:
+                    text: "Recent Transactions"
+                    bold:True
+                    font_style: "Label"
+                    role: "large"
+                    halign:"center"
+                    theme_text_color: "Custom"
+                    text_color: "#034189"
+
+                    color: "#034189"
+                    pos_hint: {'center_y':.925} 
                 
                 MDScrollView:
                     do_scroll_x: False

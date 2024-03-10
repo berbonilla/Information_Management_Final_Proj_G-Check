@@ -21,7 +21,6 @@ from kivymd.uix.widget import Widget
 from kivymd.uix.relativelayout import MDRelativeLayout
 from kivymd.uix.screenmanager import MDScreenManager
 
-
 mydb = mysql.connector.connect(
   host="localhost",
   user="root",
@@ -60,6 +59,10 @@ auditOriginfo = []
 auditStatus = []
 auditAmount = []
 auditTransactionTypes = []
+
+# Cash In Variables
+total_cash_in = []
+total_cash_out = []
 
 def query_data():
     if len(balance) < 2:
@@ -164,7 +167,10 @@ def query_data():
     dbCursor.execute("select status from audit_log")
 
     for i in dbCursor:
+        print("Audit Status",remove_chars(i))
         auditStatus.append(remove_chars(i))     
+        
+
 
 
 class BaseMDNavigationItem(MDNavigationItem):
@@ -234,11 +240,11 @@ class App(MDApp):
                 bold = "True"
                 ),
                 show_transition = "out_elastic",
-                show_duration = ".6",
+                show_duration = ".3",
                 size_hint_x=".5",
                 pos_hint = {'center_x':.5,'center_y':.5},
                 background_color= "gray",
-                duration = ".8"
+                duration = ".01"
             )
         snackbar.open()
 
@@ -253,13 +259,33 @@ class App(MDApp):
                 bold = "True"
                 ),
                 show_transition = "out_elastic",
-                show_duration = ".6",
+                show_duration = ".3",
                 size_hint_x=".5",
                 pos_hint = {'center_x':.5,'center_y':.5},
                 background_color= "gray",
-                duration = ".8"
+                duration = ".01"
             )
         snackbar.open()
+
+    def already_voided_fail(self):
+        snackbar = MDSnackbar(
+            MDSnackbarText(
+                pos_hint = {'center_x':.5},
+                halign="center",
+                theme_text_color = "Custom",
+                text_color="white",
+                text="Transaction Alread Voided",
+                bold = "True"
+                ),
+                show_transition = "out_elastic",
+                show_duration = ".3",
+                size_hint_x=".5",
+                pos_hint = {'center_x':.5,'center_y':.5},
+                background_color= "gray",
+                duration = ".01"
+            )
+        snackbar.open()
+
 
     def cannot_be_empty_fail(self):
         snackbar = MDSnackbar(
@@ -272,11 +298,11 @@ class App(MDApp):
                 bold = "True"
                 ),
                 show_transition = "out_elastic",
-                show_duration = ".6",
+                show_duration = ".3",
                 size_hint_x=".5",
                 pos_hint = {'center_x':.5,'center_y':.5},
                 background_color= "gray",
-                duration = ".8"
+                duration = ".01"
             )
         snackbar.open() 
 
@@ -284,25 +310,23 @@ class App(MDApp):
         snackbar = MDSnackbar(
             MDSnackbarText(
                 pos_hint = {'center_x':.5},
-                halign="center",
                 theme_text_color = "Custom",
                 text_color="white",
                 text="Account Not Found",
                 bold = "True"
                 ),
                 show_transition = "out_elastic",
-                show_duration = ".6",
+                show_duration = ".3",
                 size_hint_x=".5",
                 pos_hint = {'center_x':.5,'center_y':.5},
                 background_color= "gray",
-                duration = ".8"
+                duration = ".01"
             )
         snackbar.open()
-    
+            
     def reset_text_fields(self):
         self.root.ids.cash_in_amount.text = ""
         self.root.ids.cash_in_ref_number.text = ""
-        self.root.ids.cashieridField.text = ""
         self.root.ids.PinField.text = ""
         self.root.ids.cash_out_amount.text = ""
         self.root.ids.cash_out_ref_number.text = ""        
@@ -312,16 +336,19 @@ class App(MDApp):
             if (float(self.root.ids.cash_out_amount.text)) < (float(balance[0])):
                 if (self.root.ids.cash_out_ref_number not in referenceNums):
                     
+                    now_cashier = self.root.ids.cashieridField.text
+                    now_cashier = int(now_cashier)   
+                    
                     dbCursor = mydb.cursor()
                     current_date_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
                     insert_query = 'INSERT INTO transactions (amount, transaction_type,gcash_reference_number,cashierID,timestamp) VALUES (%s,%s,%s,%s,%s)'
-                    dbCursor.execute(insert_query, (self.root.ids.cash_out_amount.text,"CASH OUT",self.root.ids.cash_out_ref_number.text,1,(current_date_time)))
+                    dbCursor.execute(insert_query, (self.root.ids.cash_out_amount.text,"CASH OUT",self.root.ids.cash_out_ref_number.text,int(now_cashier),(current_date_time)))
                     
                     dbCursor.execute("SELECT LAST_INSERT_ID() AS transactionID")
                     transactionID = dbCursor.fetchone()[0]
                     
-                    insert_query = 'INSERT INTO audit_log (transactionID, amount, transaction_type,gcash_reference_number,timestamp) VALUES (%s,%s,%s,%s,%s)'
-                    dbCursor.execute(insert_query, (transactionID,self.root.ids.cash_out_amount.text,"CASH OUT",self.root.ids.cash_out_ref_number.text,(current_date_time)))
+                    insert_query = 'INSERT INTO audit_log (transactionID, amount, transaction_type,gcash_reference_number,timestamp,status) VALUES (%s,%s,%s,%s,%s,%s)'
+                    dbCursor.execute(insert_query, (transactionID,self.root.ids.cash_out_amount.text,"CASH OUT",self.root.ids.cash_out_ref_number.text,(current_date_time),"VALID"))
 
                     new_balance = (float(balance[0])-float(self.root.ids.cash_out_amount.text))
                     dbCursor.execute(f"UPDATE admin SET balance = {str(new_balance)} WHERE admin_id = {adminID[0]}")
@@ -341,16 +368,21 @@ class App(MDApp):
         if (self.root.ids.cash_in_amount.text != "" and  self.root.ids.cash_in_ref_number.text != ""):
             if (self.root.ids.cash_in_ref_number not in referenceNums):
                 
+                now_cashier = self.root.ids.cashieridField.text
+                now_cashier = int(now_cashier)       
+
+    
+                                    
                 dbCursor = mydb.cursor()
                 current_date_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
                 
                 insert_query = 'INSERT INTO transactions (amount, transaction_type,gcash_reference_number,cashierID,timestamp) VALUES (%s,%s,%s,%s,%s)'
-                dbCursor.execute(insert_query, (self.root.ids.cash_in_amount.text,"CASH IN",self.root.ids.cash_in_ref_number.text,1,(current_date_time)))
+                dbCursor.execute(insert_query, (self.root.ids.cash_in_amount.text,"CASH IN",self.root.ids.cash_in_ref_number.text,int(now_cashier),(current_date_time)))
                 dbCursor.execute("SELECT LAST_INSERT_ID() AS transactionID")
                 transactionID = dbCursor.fetchone()[0]
                 
-                insert_query = 'INSERT INTO audit_log (transactionID, amount, transaction_type,gcash_reference_number,timestamp) VALUES (%s,%s,%s,%s,%s)'
-                dbCursor.execute(insert_query, (transactionID,self.root.ids.cash_in_amount.text,"CASH IN",self.root.ids.cash_in_ref_number.text,(current_date_time)))
+                insert_query = 'INSERT INTO audit_log (transactionID, amount, transaction_type,gcash_reference_number,timestamp,status) VALUES (%s,%s,%s,%s,%s,%s)'
+                dbCursor.execute(insert_query, (transactionID,self.root.ids.cash_in_amount.text,"CASH IN",self.root.ids.cash_in_ref_number.text,(current_date_time),"VALID"))
                 
                 new_balance = (float(self.root.ids.cash_in_amount.text) + float(balance[0]))
                 dbCursor.execute(f"UPDATE admin SET balance = {str(new_balance)} WHERE admin_id = {adminID[0]}")
@@ -429,7 +461,7 @@ class App(MDApp):
             UPDATE.append(self)
         
         print("Self Value Update: ",self )
-        
+        6
         if (len(transactionIDs) != 0): 
             i = 0
             for i in range(len(transactionIDs)):      
@@ -442,128 +474,199 @@ class App(MDApp):
             self.root.ids.recent_transactions_container.clear_widgets()      
 
     def void(self):
-        print("self",self)
         id = str(self.id)
         id = int(id)
-        
-        item_index = id
-        print(item_index)
-        
-        print(amount[item_index])
-        print(transactionTypes[id])
-        print(timestamps[id])
+        try:             
+            item_index = id        
+            if auditStatus[(len(auditStatus)-1)-id] == "VALID":
+                snackbar_2 = MDSnackbar(
+                    orientation = "vertical",
+                    show_transition = "out_elastic",
+                    show_duration = ".5",
+                    size_hint_y=".85",
+                    pos_hint = {'center_x':.5,'center_y':.5},
+                    duration="60",
+                    background_color= (143,142,142,.3),
+                    radius = [15,15,15,15],
+                    spacing = 25
+                )
                 
-        label_1 = MDLabel(                
-                text= f"{amount[item_index]}",
-                font_style = "Title",
-                role= "medium",   
-                text_color= "black",
-                bold = True,
-                halign = "center",
-                pos_hint= {"center_x": .5,"center_y": .8},
-                size_hint_x= .625,
-        )
-        
-        label_2 = MDLabel(                
-                text= f"{transactionTypes[id]}",
-                font_style = "Title",
-                role= "medium",   
-                text_color= "black",
-                bold = True,
-                halign = "center",
-                pos_hint= {"center_x": .5,"center_y": .75},
-                size_hint_x= .625,
-        )
-        
-        label_3 = MDLabel(                
-                text= f"{timestamps[id]}",
-                font_style = "Title",
-                role= "medium",   
-                text_color= "black",
-                bold = True,
-                halign = "center",
-                pos_hint= {"center_x": .5,"center_y": .7},
-                size_hint_x= .625,
-        )
+                summary = MDLabel(                
+                    text= "Audit Summary",
+                    font_style = "Title",
+                    role= "medium",   
+                    bold = True,
+                    halign = "center",
+                    pos_hint= {"center_x": .5},
+                    size_hint_y= .5,
+                    theme_text_color= "Custom",
+                    text_color="#034189",
+                    theme_bg_color= "Custom",
+                    md_bg_color = "#FFFFFF",
+                    radius = [15,15,15,15]                    
+                )
+                
+                label_1 = MDLabel(                
+                    text= f"Amount        :{amount[item_index]}",
+                    font_style = "Title",
+                    role= "medium",   
+                    text_color= "black",
+                    bold = True,
+                    halign = "left",
+                    pos_hint= {"center_x": .5},
+                    size_hint_y= .5,
+                    size_hint_x= .8,
+                    theme_bg_color= "Custom",
+                    md_bg_color = "#8f8e8e4d",                 
+                )
+                
+                label_2 = MDLabel(                
+                    text= f"Type            :{transactionTypes[id]}",
+                    font_style = "Title",
+                    role= "medium",   
+                    text_color= "black",
+                    bold = True,
+                    halign = "left",
+                    pos_hint= {"center_x": .5},
+                    size_hint_y= .5,
+                    size_hint_x= .8,
+                    theme_bg_color= "Custom",
+                    md_bg_color = "#8f8e8e4d",
+                )
+                
+                label_3 = MDLabel(                
+                    text= f"Processed on :{timestamps[id]}",
+                    font_style = "Title",
+                    role= "medium",   
+                    text_color= "black",
+                    bold = True,
+                    halign = "left",
+                    pos_hint= {"center_x": .5},
+                    size_hint_y= .5,
+                    size_hint_x= .8,
+                    theme_bg_color= "Custom",
+                    md_bg_color = "#8f8e8e4d",
+                )
+                
+                label_4 = MDLabel(                
+                    text= f"Cashier Num  :{cashierID[id]}",
+                    font_style = "Title",
+                    role= "medium",   
+                    text_color= "black",
+                    bold = True,
+                    halign = "left",
+                    pos_hint= {"center_x": .5},
+                    size_hint_y= .5,
+                    size_hint_x= .8,
+                    theme_bg_color= "Custom",
+                    md_bg_color = "#8f8e8e4d",
+                )
+                
+                label_5 = MDLabel(                
+                    text= f"Status       :{auditStatus[(len(auditStatus)-1)-id]}",
+                    font_style = "Title",
+                    role= "medium",   
+                    text_color= "black",
+                    bold = True,
+                    halign = "left",
+                    pos_hint= {"center_x": .5},
+                    size_hint_y= .5,
+                    size_hint_x= .8,
+                    theme_bg_color= "Custom",
+                    md_bg_color = "#8f8e8e4d",
+                )
+                
+                proceed_button = MDButton(
+                        MDButtonText(
+                            bold= True,
+                            font_style= "Title",
+                            role="medium",
+                            text= "Void",
+                            pos_hint= {"center_x": .5,"center_y":.5},
+                            theme_text_color= "Custom",
+                            text_color= "#000000",
+                            radius= [100,100,100,100],
+                        ),       
+                        style= "elevated",
+                        theme_width = "Custom",
+                        size_hint_x= .45,
+                        height= "56dp",            
+                        pos_hint={"center_x": .5,"center_y":.4},
+                        theme_bg_color= "Custom",
+                        on_release = lambda instance: App.process_void_data(self,item_index,textNewAmount.text,textNewRefNum.text) 
+                    )
+                
+                exit_button = MDButton(
+                        MDButtonText(
+                            bold= True,
+                            font_style= "Title",
+                            role="medium",
+                            text= "Close",
+                            pos_hint= {"center_x": .5,"center_y":.5},
+                            theme_text_color= "Custom",
+                            text_color= "#000000",
+                            radius= [100,100,100,100],
+                        ),       
+                        style= "elevated",
+                        theme_width = "Custom",
+                        size_hint_x= .45,
+                        height= "56dp",            
+                        pos_hint={"center_x": .5,"center_y":.4},
+                        theme_bg_color= "Custom",
+                        on_release = lambda instance: snackbar_2.dismiss()
+                    )                                
+                
+                textNewAmount = MDTextField(                
+                        MDTextFieldHintText(
+                            text= "New Amount",
+                            font_style = "Label",
+                            role= "small",
+                            theme_text_color= "Custom",
+                            text_color= "#000000"                                     
+                        ), 
+                        mode = "outlined",
+                        theme_text_color= "Custom",
+                        text_color_focus= (0,0,0,1),         
+                        pos_hint= {"center_x": .5,"center_y":.6},
+                        size_hint_x= .625,
+                        theme_line_color= "Custom",
+                        line_color_focus= (0,0,0,1),
+                        md_bg_color="#0d82f6"
+                    )
+                
+                textNewRefNum = MDTextField(                
+                        MDTextFieldHintText(
+                            text= "New Reference #",
+                            font_style = "Label",
+                            role= "small",
+                            theme_text_color= "Custom",
+                            text_color= "#000000"                                     
+                        ), 
+                        mode = "outlined",
+                        theme_text_color= "Custom",
+                        text_color_focus= (0,0,0,1),         
+                        pos_hint= {"center_x": .5,"center_y":.5},
+                        size_hint_x= .625,
+                        theme_line_color= "Custom",
+                        line_color_focus= (0,0,0,1),
+                        md_bg_color="#0d82f6"
+                    )
+       
+            snackbar_2.add_widget(summary)
+            snackbar_2.add_widget(label_1)
+            snackbar_2.add_widget(label_2)
+            snackbar_2.add_widget(label_3)
+            snackbar_2.add_widget(label_4)
+            snackbar_2.add_widget(label_5)
+            snackbar_2.add_widget(proceed_button)
+            snackbar_2.add_widget(exit_button)
+            snackbar_2.open()
+       
+        except:
             
-        snackbar_2 = MDSnackbar(
-            orientation = "vertical",
-            show_transition = "out_elastic",
-            show_duration = ".5",
-            size_hint_x=".9",
-            size_hint_y=".7",
-            pos_hint = {'center_x':.5,'center_y':.5},
-            duration="60",
-            background_color= "#5B8BDF",
-            spacing = 0,
-            padding = [0,0,0,0]
-        )
+            SELF[0].already_voided_fail()
         
-        exit_button = MDButton(
-                MDButtonText(
-                    bold= True,
-                    font_style= "Title",
-                    role="medium",
-                    text= "Void",
-                    pos_hint= {"center_x": .5,"center_y":.5},
-                    theme_text_color= "Custom",
-                    text_color= "#000000",
-                    radius= [100,100,100,100],
-                ),       
-                style= "elevated",
-                theme_width = "Custom",
-                size_hint_x= .85,
-                height= "56dp",            
-                pos_hint={"center_x": .5,"center_y":.4},
-                theme_bg_color= "Custom",
-                on_release = lambda instance: snackbar_2.dismiss(),                           
-            )
-        
-        textNewAmount = MDTextField(                
-                MDTextFieldHintText(
-                    text= "New Amount",
-                    font_style = "Label",
-                    role= "small",
-                    theme_text_color= "Custom",
-                    text_color= "#000000"                                     
-                ), 
-                mode = "outlined",
-                theme_text_color= "Custom",
-                text_color_focus= (0,0,0,1),         
-                pos_hint= {"center_x": .5,"center_y":.6},
-                size_hint_x= .625,
-                theme_line_color= "Custom",
-                line_color_focus= (0,0,0,1),
-                md_bg_color="#0d82f6"
-            )
-        
-        textNewRefNum = MDTextField(                
-                MDTextFieldHintText(
-                    text= "New Reference #",
-                    font_style = "Label",
-                    role= "small",
-                    theme_text_color= "Custom",
-                    text_color= "#000000"                                     
-                ), 
-                mode = "outlined",
-                theme_text_color= "Custom",
-                text_color_focus= (0,0,0,1),         
-                pos_hint= {"center_x": .5,"center_y":.5},
-                size_hint_x= .625,
-                theme_line_color= "Custom",
-                line_color_focus= (0,0,0,1),
-                md_bg_color="#0d82f6"
-            )
             
-        snackbar_2.add_widget(label_1)
-        snackbar_2.add_widget(label_2)
-        snackbar_2.add_widget(label_3)
-        snackbar_2.add_widget(textNewAmount)
-        snackbar_2.add_widget(textNewRefNum)
-        snackbar_2.add_widget(exit_button)
-        snackbar_2.open()
-        snackbar_2.bind(on_dismiss = lambda instance: App.process_void_data(self,item_index,textNewAmount.text,textNewRefNum.text))
-    
     def process_void_data(self,*args):
         
         index = remove_chars(args[0])
@@ -627,10 +730,13 @@ class App(MDApp):
         UPDATE[0].root.ids.BalanceLabelCashout.text = (f"₱ {balanceDisplay}")
         UPDATE[0].root.ids.BalanceLabelCashIn.text = (f"₱ {balanceDisplay}")
         
+        SCREEN[0].current = "auditLogScreen"
+        
     def get_text(self,*args):
         if (adminAuthCode[0] == self):
             AUTHCODE.append(self)
             SCREEN[0].current = "auditLogScreen"
+            query_data()
             
             if (len(transactionIDs) != 0): 
                 i = 0
@@ -650,12 +756,16 @@ class App(MDApp):
                     
                 SCREEN[0].ids.audits_container.clear_widgets()
                 
+            UPDATE[0].update()    
             query_data() 
+            
+            print("Audit Displays")
 
             for i in range(len(auditlogIDS)):
-                if(auditStatus[i] == "VOIDED"):
+
+                if(auditStatus[(len(auditStatus)-1)-i] == "VOIDED"):
                     mode = True
-                else:
+                elif(auditStatus[(len(auditStatus)-1)-i] == "VALID"):
                     mode = False
                 SCREEN[0].ids.audits_container.add_widget( 
                     MDListItem(
@@ -665,7 +775,7 @@ class App(MDApp):
                             role= "medium",
                             theme_text_color= "Custom",
                             text_color="#000000",
-                            pos_hint= {"center_x": .5, "center_y": .5},
+                            pos_hint= {"center_x": .5, "center_y": .8},
                             bold = True               
                         ),                    
                         MDListItemSupportingText(
@@ -673,7 +783,7 @@ class App(MDApp):
                             font_style = "Label",
                             role= "medium",
                             theme_text_color= "Custom",
-                            pos_hint= {"center_x": .5, "center_y": .3},
+                            pos_hint= {"center_x": .5, "center_y": .725},
                             text_color="#000000"                   
                         ),                  
                         MDListItemSupportingText(
@@ -681,14 +791,15 @@ class App(MDApp):
                             font_style = "Label",
                             role= "small",
                             theme_text_color= "Custom",
-                            pos_hint= {"center_x": 1, "center_y": .3},
+                            pos_hint= {"center_x": 1, "center_y": .675},
                             text_color="#000000"
                         ),
-                        disabled = mode,  
+                        disabled = mode,                          
                         id = str(i),   
                         on_press= void_display,
                         theme_bg_color= "Custom",
                         md_bg_color= "#D3D3D3",
+                        md_bg_color_disabled = "#8f8e8ecc",
                         radius = (3,3,3,3),
                         divider = True,
                         divider_color= (0, 0, 0, .5)                            
@@ -696,6 +807,10 @@ class App(MDApp):
                 )
             
             success
+            UPDATE[0].update()
+            query_data()
+            SCREEN[0].current = "auditLogScreen"
+        
             
     def show_snackbar(self):   
         id = str(self.id)
@@ -735,20 +850,25 @@ class App(MDApp):
             theme_bg_color = "Custom",
             md_bg_color= "white"                     
         )
-         
+        
         self.snackbar = MDSnackbar(
             pos_hint={"center_y": 0.5,"center_x": 0.5},
             size_hint_x=0.625,
             show_transition = "out_elastic",
-            padding = [1,1,0,0],
+            padding = [1,1,1,1],
             show_duration = ".8",
-            background_color= "#0d82f6"
+            background_color= "#0d82f6",
+            duration = ".5"
         )
         
         self.snackbar.add_widget(self.textfield)
         self.snackbar.add_widget(self.button)
         self.snackbar.open()
         self.snackbar.bind(on_dismiss = lambda instance: App.get_text(self.textfield.text,item_index))
+    
+    def reset_pin(self):
+        print(self)
+    
     
     def dashboard(self):
         self.update()
