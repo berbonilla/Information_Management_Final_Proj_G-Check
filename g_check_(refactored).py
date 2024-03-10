@@ -920,7 +920,7 @@ class App(MDApp):
                     id = str(i),   
                     on_press= show,
                     theme_bg_color= "Custom",
-                    md_bg_color= "#6b6b6b",
+                    md_bg_color= "#D3D3D3",
                     radius = (3,3,3,3),
                     divider = True,
                     divider_color= (0, 0, 0, .5)                            
