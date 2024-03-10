@@ -204,7 +204,6 @@ def success():
         
         App.reset_text_fields
 
-
 SCREEN = []
 AUTHCODE = []
 SELF = []
@@ -727,7 +726,7 @@ class App(MDApp):
         balanceDisplay = str(balanceDisplay)
 
         UPDATE[0].root.ids.BalanceLabelDashboard.text = (f"₱ {balanceDisplay}")
-        UPDATE[0].root.ids.BalanceLabelCashout.text = (f"₱ {balanceDisplay}")
+        UPDATE[0].root.ids.BalanceLabe6lCashout.text = (f"₱ {balanceDisplay}")
         UPDATE[0].root.ids.BalanceLabelCashIn.text = (f"₱ {balanceDisplay}")
         
         SCREEN[0].current = "auditLogScreen"
@@ -799,7 +798,7 @@ class App(MDApp):
                         on_press= void_display,
                         theme_bg_color= "Custom",
                         md_bg_color= "#D3D3D3",
-                        md_bg_color_disabled = "#8f8e8ecc",
+                        md_bg_color_disabled = "#6b6b6b",
                         radius = (3,3,3,3),
                         divider = True,
                         divider_color= (0, 0, 0, .5)                            
@@ -858,7 +857,7 @@ class App(MDApp):
             padding = [1,1,1,1],
             show_duration = ".8",
             background_color= "#0d82f6",
-            duration = ".5"
+            duration = "3"
         )
         
         self.snackbar.add_widget(self.textfield)
@@ -921,7 +920,7 @@ class App(MDApp):
                     id = str(i),   
                     on_press= show,
                     theme_bg_color= "Custom",
-                    md_bg_color= "#D3D3D3",
+                    md_bg_color= "#6b6b6b",
                     radius = (3,3,3,3),
                     divider = True,
                     divider_color= (0, 0, 0, .5)                            
