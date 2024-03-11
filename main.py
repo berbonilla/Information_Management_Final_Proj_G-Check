@@ -268,12 +268,12 @@ class App(MDApp):
                 halign="center",
                 theme_text_color = "Custom",
                 text_color="white",
-                text="Transaction Alread Voided",
+                text="Void Recent Transaction First",
                 bold = "True"
                 ),
                 show_transition = "out_elastic",
                 show_duration = ".3",
-                size_hint_x=".5",
+                size_hint_x=".7",
                 pos_hint = {'center_x':.5,'center_y':.5},
                 background_color= "gray",
                 duration = ".01"
@@ -326,72 +326,80 @@ class App(MDApp):
         self.root.ids.cash_out_ref_number.text = ""        
         
     def cash_out(self):
-        if (len(self.root.ids.cash_out_ref_number.text) == 4):
-            if (self.root.ids.cash_out_amount.text != "" and  self.root.ids.cash_out_ref_number.text != ""):
-                if (float(self.root.ids.cash_out_amount.text)) < (float(balance[0])):
-                    if (self.root.ids.cash_out_ref_number.text not in referenceNums):
+        try:
+            if (len(self.root.ids.cash_out_ref_number.text) == 4):
+                if (self.root.ids.cash_out_amount.text != "" and  self.root.ids.cash_out_ref_number.text != ""):
+                    if (float(self.root.ids.cash_out_amount.text)) < (float(balance[0])):
+                        if (self.root.ids.cash_out_ref_number.text not in referenceNums):
+                            
+                            now_cashier = self.root.ids.cashieridField.text
+                            now_cashier = int(now_cashier)   
+                            
+                            dbCursor = mydb.cursor()
+                            current_date_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+                            insert_query = 'INSERT INTO transactions (amount, transaction_type,gcash_reference_number,cashierID,timestamp) VALUES (%s,%s,%s,%s,%s)'
+                            dbCursor.execute(insert_query, (self.root.ids.cash_out_amount.text,"CASH OUT",self.root.ids.cash_out_ref_number.text,int(now_cashier),(current_date_time)))
+                            
+                            dbCursor.execute("SELECT LAST_INSERT_ID() AS transactionID")
+                            transactionID = dbCursor.fetchone()[0]
+                            
+                            insert_query = 'INSERT INTO audit_log (transactionID, amount, transaction_type,gcash_reference_number,timestamp,status) VALUES (%s,%s,%s,%s,%s,%s)'
+                            dbCursor.execute(insert_query, (transactionID,self.root.ids.cash_out_amount.text,"CASH OUT",self.root.ids.cash_out_ref_number.text,(current_date_time),"VALID"))
+
+                            new_balance = (float(balance[0])-float(self.root.ids.cash_out_amount.text))
+                            dbCursor.execute(f"UPDATE admin SET balance = {str(new_balance)} WHERE admin_id = {adminID[0]}")
+                            
+                            mydb.commit()
+                            success
+                            
+                            query_data()
+                            return True
+                
+                else:
+                    self.invalid_input_fail
+                    return False  
+            else:
+                self.invalid_input_fail
+                return False 
+        except:
+            self.invalid_input_fail
+            return False       
+           
+    def cash_in(self):
+        try:
+            if (len(self.root.ids.cash_in_ref_number.text) == 4):
+                if (self.root.ids.cash_in_amount.text != "" and  self.root.ids.cash_in_ref_number.text != ""):
+                    if (self.root.ids.cash_in_ref_number.text not in referenceNums):
                         
                         now_cashier = self.root.ids.cashieridField.text
-                        now_cashier = int(now_cashier)   
-                        
+                        now_cashier = int(now_cashier)       
+
+            
+                                            
                         dbCursor = mydb.cursor()
                         current_date_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-                        insert_query = 'INSERT INTO transactions (amount, transaction_type,gcash_reference_number,cashierID,timestamp) VALUES (%s,%s,%s,%s,%s)'
-                        dbCursor.execute(insert_query, (self.root.ids.cash_out_amount.text,"CASH OUT",self.root.ids.cash_out_ref_number.text,int(now_cashier),(current_date_time)))
                         
+                        insert_query = 'INSERT INTO transactions (amount, transaction_type,gcash_reference_number,cashierID,timestamp) VALUES (%s,%s,%s,%s,%s)'
+                        dbCursor.execute(insert_query, (self.root.ids.cash_in_amount.text,"CASH IN",self.root.ids.cash_in_ref_number.text,int(now_cashier),(current_date_time)))
                         dbCursor.execute("SELECT LAST_INSERT_ID() AS transactionID")
                         transactionID = dbCursor.fetchone()[0]
                         
                         insert_query = 'INSERT INTO audit_log (transactionID, amount, transaction_type,gcash_reference_number,timestamp,status) VALUES (%s,%s,%s,%s,%s,%s)'
-                        dbCursor.execute(insert_query, (transactionID,self.root.ids.cash_out_amount.text,"CASH OUT",self.root.ids.cash_out_ref_number.text,(current_date_time),"VALID"))
-
-                        new_balance = (float(balance[0])-float(self.root.ids.cash_out_amount.text))
-                        dbCursor.execute(f"UPDATE admin SET balance = {str(new_balance)} WHERE admin_id = {adminID[0]}")
+                        dbCursor.execute(insert_query, (transactionID,self.root.ids.cash_in_amount.text,"CASH IN",self.root.ids.cash_in_ref_number.text,(current_date_time),"VALID"))
                         
+                        new_balance = (float(self.root.ids.cash_in_amount.text) + float(balance[0]))
+                        dbCursor.execute(f"UPDATE admin SET balance = {str(new_balance)} WHERE admin_id = {adminID[0]}")
                         mydb.commit()
+                        
                         success
                         
-                        query_data()
                         return True
-            
+                
+                query_data()
             else:
                 self.invalid_input_fail
-                return False  
-        else:
-            self.invalid_input_fail
-            return False 
-                 
-    def cash_in(self):
-        if (len(self.root.ids.cash_in_ref_number.text) == 4):
-            if (self.root.ids.cash_in_amount.text != "" and  self.root.ids.cash_in_ref_number.text != ""):
-                if (self.root.ids.cash_in_ref_number.text not in referenceNums):
-                    
-                    now_cashier = self.root.ids.cashieridField.text
-                    now_cashier = int(now_cashier)       
-
-        
-                                        
-                    dbCursor = mydb.cursor()
-                    current_date_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-                    
-                    insert_query = 'INSERT INTO transactions (amount, transaction_type,gcash_reference_number,cashierID,timestamp) VALUES (%s,%s,%s,%s,%s)'
-                    dbCursor.execute(insert_query, (self.root.ids.cash_in_amount.text,"CASH IN",self.root.ids.cash_in_ref_number.text,int(now_cashier),(current_date_time)))
-                    dbCursor.execute("SELECT LAST_INSERT_ID() AS transactionID")
-                    transactionID = dbCursor.fetchone()[0]
-                    
-                    insert_query = 'INSERT INTO audit_log (transactionID, amount, transaction_type,gcash_reference_number,timestamp,status) VALUES (%s,%s,%s,%s,%s,%s)'
-                    dbCursor.execute(insert_query, (transactionID,self.root.ids.cash_in_amount.text,"CASH IN",self.root.ids.cash_in_ref_number.text,(current_date_time),"VALID"))
-                    
-                    new_balance = (float(self.root.ids.cash_in_amount.text) + float(balance[0]))
-                    dbCursor.execute(f"UPDATE admin SET balance = {str(new_balance)} WHERE admin_id = {adminID[0]}")
-                    mydb.commit()
-                    
-                    success
-                    
-                    return True
-            
-            query_data()
-        else:
+                return False 
+        except:
             self.invalid_input_fail
             return False 
         
@@ -480,6 +488,7 @@ class App(MDApp):
         id = str(self.id)
         id = int(id)
         print(id)
+        
         try:             
             item_index = id        
             if auditStatus[(len(auditStatus)-1)-id] == "VALID":
@@ -511,7 +520,7 @@ class App(MDApp):
                 )
                 
                 label_1 = MDLabel(                
-                    text= f"Amount        :{amount[item_index]}",
+                    text= f"Amount        :{amount[id]}",
                     font_style = "Title",
                     role= "medium",   
                     text_color= "black",
@@ -597,7 +606,7 @@ class App(MDApp):
                         height= "56dp",            
                         pos_hint={"center_x": .5,"center_y":.4},
                         theme_bg_color= "Custom",
-                        on_release = lambda instance:( snackbar_2.dismiss() , App.process_void_data(self,item_index,textNewAmount.text,textNewRefNum.text)) 
+                        on_release = lambda instance:( snackbar_2.dismiss() , App.process_void_data(self,id,textNewAmount.text,textNewRefNum.text)) 
                     )
                 
                 exit_button = MDButton(
@@ -734,6 +743,7 @@ class App(MDApp):
         UPDATE[0].root.ids.BalanceLabelCashout.text = (f"₱ {balanceDisplay}")
         UPDATE[0].root.ids.BalanceLabelCashIn.text = (f"₱ {balanceDisplay}")
         
+        SCREEN[0].current = "dashboard"
         
     def get_text(self,*args):
         if (adminAuthCode[0] == self):
