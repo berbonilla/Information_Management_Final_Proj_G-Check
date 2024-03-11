@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 06, 2024 at 09:35 PM
+-- Generation Time: Mar 10, 2024 at 03:04 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -106,7 +106,7 @@ ALTER TABLE `transactions`
 -- AUTO_INCREMENT for table `audit_log`
 --
 ALTER TABLE `audit_log`
-  MODIFY `auditlogID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=551204;
+  MODIFY `auditlogID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=551270;
 
 --
 -- AUTO_INCREMENT for table `cashiers`
@@ -118,7 +118,7 @@ ALTER TABLE `cashiers`
 -- AUTO_INCREMENT for table `transactions`
 --
 ALTER TABLE `transactions`
-  MODIFY `transactionID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=55206;
+  MODIFY `transactionID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=55272;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
