@@ -658,6 +658,8 @@ class App(MDApp):
             snackbar_2.add_widget(exit_button)
             snackbar_2.open()
        
+            
+            
         except:
             
             SELF[0].already_voided_fail()
@@ -726,7 +728,6 @@ class App(MDApp):
         UPDATE[0].root.ids.BalanceLabelCashout.text = (f"₱ {balanceDisplay}")
         UPDATE[0].root.ids.BalanceLabelCashIn.text = (f"₱ {balanceDisplay}")
         
-        SCREEN[0].current = "auditLogScreen"
         
     def get_text(self,*args):
         if (adminAuthCode[0] == self):
@@ -803,7 +804,6 @@ class App(MDApp):
             success
             UPDATE[0].update()
             query_data()
-            SCREEN[0].current = "auditLogScreen"
         
             
     def show_snackbar(self):   
@@ -837,12 +837,12 @@ class App(MDApp):
             MDSnackbarActionButtonText(
                 text="Proceed",
                 theme_text_color = "Custom",
-                text_color = "#0d82f6",
+                text_color = "white",
             ),
             pos_hint={"center_y": 0.2,"center_x": 0.5},
             on_release = lambda instance: self.snackbar.dismiss(),
             theme_bg_color = "Custom",
-            md_bg_color= "white"                     
+            md_bg_color= "#0d82f6"                     
         )
         
         self.snackbar = MDSnackbar(
